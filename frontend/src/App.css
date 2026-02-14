@@ -1,90 +1,110 @@
 body {
   margin: 0;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
   font-family: "Segoe UI", sans-serif;
-}
-
-.app {
-  max-width: 1100px;
-  margin: auto;
-  padding: 30px;
+  background: #0f172a;
+  color: #e2e8f0;
 }
 
 h1 {
   text-align: center;
-  font-size: 2.2rem;
+  padding: 20px 0;
+  font-size: 28px;
+  color: #f8fafc;
 }
 
-.subtitle {
-  text-align: center;
-  color: #6b7280;
-  margin-bottom: 30px;
-}
-
-.upload-card {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  align-items: flex-end;
-  background: white;
+.app {
   padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
-  margin-bottom: 30px;
+}
+
+.upload-card,
+.card {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  margin-bottom: 25px;
+}
+
+.upload-card input {
+  margin: 10px 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #e2e8f0;
 }
 
 .upload-card label {
-  display: block;
   font-weight: 600;
-  margin-bottom: 6px;
 }
 
-.primary-btn {
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: white;
+.upload-card button,
+.download-buttons button {
+  background: #3b82f6;
+  color: #f8fafc;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
+  padding: 10px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.4);
+  font-weight: 600;
+  margin-top: 10px;
+  transition: all 0.2s ease;
 }
 
-.primary-btn:hover {
-  transform: translateY(-2px);
+.upload-card button:hover,
+.download-buttons button:hover {
+  background: #2563eb;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-  margin-bottom: 25px;
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
 }
 
-.card h2,
-.card h3 {
-  margin-bottom: 15px;
+.summary-box {
+  background: #111827;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-.card ul {
-  padding-left: 18px;
+.summary-box h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
-.danger {
-  border-left: 6px solid #ef4444;
+.summary-box p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #e2e8f0;
 }
 
-.success {
-  border-left: 6px solid #22c55e;
+.summary-box.stable {
+  border-left: 4px solid #22c55e;
 }
 
-.info {
-  border-left: 6px solid #3b82f6;
+.summary-box.fail {
+  border-left: 4px solid #ef4444;
+}
+
+.summary-box.fixed {
+  border-left: 4px solid #facc15;
+}
+
+.summary-box.warn {
+  border-left: 4px solid #f97316;
+}
+
+.download-buttons {
+  margin-top: 20px;
+  text-align: center;
 }

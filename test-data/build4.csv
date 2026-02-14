@@ -1,0 +1,15 @@
+Feature,Scenario,Status
+Login,Valid Login,PASS
+Login,Invalid Password,FAIL
+Checkout,Apply Coupon,PASS
+Payments,Credit Card,FAIL
+Profile,Update Info,PASS
+Search,Product Search,FAIL
+Wishlist,Add to Wishlist,PASS
+Notifications,Enable Email Alerts,PASS
+Orders,View Order History,FAIL
+Cart,Remove Item,PASS
+Support,Submit Ticket,PASS
+Settings,Change Password,PASS
+Analytics,View Reports,PASS
+Feedback,Submit Review,PASS

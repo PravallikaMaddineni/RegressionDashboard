@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Regression Testing Dashboard</title>
+
+  <!-- Chart.js for doughnut chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- jsPDF for PDF download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    header {
+      padding: 20px;
+      background: #020617;
+      border-bottom: 1px solid #1e293b;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .container {
+      padding: 25px;
+      display: grid;
+      gap: 25px;
+    }
+
+    .card {
+      background: #0b1220;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+
+    input[type="file"] {
+      margin: 10px 0;
+      color: #e5e7eb;
+    }
+
+    button {
+      background: #22c55e;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #020617;
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+
+    button:hover {
+      background: #16a34a;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    canvas {
+      max-width: 300px;
+      margin: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🧪 Regression Testing Dashboard</h1>
+</header>
+
+<div class="container">
+
+  <!-- Upload Section -->
+  <div class="card">
+    <h2>📂 Upload Builds</h2>
+
+    <label>Old Build CSV</label><br>
+    <input type="file" id="oldBuild"><br>
+
+    <label>New Build CSV</label><br>
+    <input type="file" id="newBuild"><br>
+
+    <button onclick="compareBuilds()">Compare Builds</button>
+  </div>
+
+  <!-- Summary -->
+  <div class="card">
+    <h2>📊 Regression Summary</h2>
+    <ul id="summary"></ul>
+
+    <button onclick="downloadPDFReport()">⬇️ Download PDF Report</button>
+  </div>
+
+  <!-- Stability Chart -->
+  <div class="card">
+    <h2>🟢 Build Stability</h2>
+    <canvas id="stabilityChart"></canvas>
+  </div>
+
+</div>
+
+<script>
+let lastReport = [];
+let chartInstance = null;
+
+// CSV parsing
+function parseCSV(file, callback) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const rows = reader.result.trim().split("\n").slice(1);
+    const data = {};
+    rows.forEach(r => {
+      const [feature, status] = r.split(",");
+      data[feature.trim()] = status.trim();
+    });
+    callback(data);
+  };
+  reader.readAsText(file);
+}
+
+// Compare builds and populate summary
+function compareBuilds() {
+  const oldFile = document.getElementById("oldBuild").files[0];
+  const newFile = document.getElementById("newBuild").files[0];
+
+  if (!oldFile || !newFile) {
+    alert("Upload both build files 😅");
+    return;
+  }
+
+  parseCSV(oldFile, oldData => {
+    parseCSV(newFile, newData => {
+      const summary = document.getElementById("summary");
+      summary.innerHTML = "";
+      lastReport = [];
+
+      let regressions = 0;
+      let stableCount = 0;
+
+      Object.keys(oldData).forEach(feature => {
+        const oldStatus = oldData[feature];
+        const newStatus = newData[feature];
+
+        let type = "Stable";
+        if (oldStatus === "PASS" && newStatus === "FAIL") {
+          regressions++;
+          type = "Regression";
+          summary.innerHTML += `<li>❌ Regression in <b>${feature}</b></li>`;
+        } else {
+          stableCount++;
+          summary.innerHTML += `<li>✅ Stable: <b>${feature}</b></li>`;
+        }
+
+        lastReport.push({ feature, oldStatus, newStatus, type });
+      });
+
+      drawChart(stableCount, regressions);
+    });
+  });
+}
+
+// Draw doughnut chart
+function drawChart(stable, regressions) {
+  const ctx = document.getElementById("stabilityChart");
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Stable", "Regressions"],
+      datasets: [{
+        data: [stable, regressions],
+        backgroundColor: ["#22c55e", "#ef4444"]
+      }]
+    }
+  });
+}
+
+// PDF Download
+function downloadPDFReport() {
+  if (lastReport.length === 0) {
+    alert("Compare builds first 😄");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("🧪 Regression Testing Report", 14, 20);
+
+  doc.setFontSize(12);
+  let y = 30;
+  doc.text("Feature       Old Status       New Status       Result", 14, y);
+  y += 10;
+
+  lastReport.forEach(r => {
+    const line = `${r.feature}       ${r.oldStatus}       ${r.newStatus}       ${r.type}`;
+    doc.text(line, 14, y);
+    y += 8;
+    if (y > 280) { // new page
+      doc.addPage();
+      y = 20;
+    }
+  });
+
+  doc.save("regression-report.pdf");
+}
+</script>
+
+</body>
+</html>

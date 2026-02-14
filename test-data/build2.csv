@@ -1,5 +1,13 @@
-testcase,status
-TC01,Pass
-TC02,Fail
-TC03,Fail
-TC04,Pass
+Feature,Scenario,Status
+Login,Valid Login,PASS
+Login,Invalid Password,PASS
+Checkout,Apply Coupon,FAIL
+Payments,Credit Card,PASS
+Profile,Update Info,PASS
+Search,Product Search,PASS
+Wishlist,Add to Wishlist,FAIL
+Notifications,Enable Email Alerts,PASS
+Orders,View Order History,FAIL
+Cart,Remove Item,PASS
+Support,Submit Ticket,PASS
+Settings,Change Password,FAIL
